@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSnapshot } from 'valtio';
 
-import config from '../config/config';
 import state from '../store';
 import { download } from '../assets';
 import { downloadCanvasToImage, reader } from '../config/helpers';
@@ -64,8 +63,9 @@ const Customizer = () => {
       })
 
       const data = await response.json();
-
-      handleDecals(type, `data:image/png;base64,${data.photo}`)
+      if(data) {
+        handleDecals(type, `data:image/png;base64,${data.photo}`)
+      }
     } catch (error) {
       alert(error)
     } finally {
@@ -95,7 +95,7 @@ const Customizer = () => {
       default:
         state.isLogoTexture = true;
         state.isFullTexture = false;
-        break; 
+        break;
     }
 
     // after setting the state, activeFilterTab is updated
@@ -165,6 +165,13 @@ const Customizer = () => {
                 handleClick={() => handleActiveFilterTab(tab.name)}
               />
             ))}
+            <button className='download-btn' onClick={downloadCanvasToImage}>
+          <img
+            src={download}
+            alt='download_image'
+            className='w-3/5 h-3/5 object-contain'
+          />
+        </button>
           </motion.div>
         </>
       )}
